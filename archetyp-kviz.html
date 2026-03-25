@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaký je tvůj brandový archetyp? | Holky v onlinu</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800&family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',sans-serif;background:#fdf6f0;color:#2A1A35;min-height:100vh}
+  .wrap{max-width:680px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  .header{text-align:center;margin-bottom:2.5rem}
+  .logo-tag{display:inline-block;background:#f6d4d2;color:#7A2050;font-size:11px;font-weight:600;letter-spacing:.12em;padding:5px 14px;border-radius:20px;margin-bottom:1rem;text-transform:uppercase}
+  .title{font-family:'League Spartan',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#2A1A35;line-height:1.1;margin-bottom:.6rem}
+  .title span{color:#CFC2DA}
+  .subtitle{font-size:14px;color:#9480A0;line-height:1.6;max-width:480px;margin:0 auto}
+  .progress-area{margin-bottom:2rem}
+  .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+  .progress-label{font-size:12px;color:#9480A0;font-weight:500}
+  .progress-num{font-size:12px;color:#9480A0}
+  .progress-track{background:#EDE5F5;border-radius:20px;height:6px;overflow:hidden}
+  .progress-fill{height:6px;background:linear-gradient(90deg,#E69DAF,#CFC2DA);border-radius:20px;transition:width .4s ease}
+  .question-card{background:#fff;border:1px solid #EDE5F5;border-radius:20px;padding:2rem;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(207,194,218,.12)}
+  .q-number{font-size:11px;font-weight:600;letter-spacing:.1em;color:#E69DAF;text-transform:uppercase;margin-bottom:.75rem}
+  .q-text{font-size:17px;font-weight:500;line-height:1.5;color:#2A1A35;margin-bottom:1.5rem}
+  .options{display:flex;flex-direction:column;gap:.75rem}
+  .option{background:#fdf6f0;border:1.5px solid #EDE5F5;border-radius:14px;padding:1rem 1.25rem;cursor:pointer;transition:all .2s ease;display:flex;align-items:flex-start;gap:.875rem;text-align:left}
+  .option:hover{border-color:#CFC2DA;background:#f6f0fb}
+  .option.selected{border-color:#E69DAF;background:#FCF0F6}
+  .option-dot{width:20px;height:20px;border-radius:50%;border:2px solid #CFC2DA;flex-shrink:0;margin-top:1px;transition:all .2s;display:flex;align-items:center;justify-content:center}
+  .option.selected .option-dot{border-color:#E69DAF;background:#E69DAF}
+  .option-dot-inner{width:8px;height:8px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s}
+  .option.selected .option-dot-inner{opacity:1}
+  .option-text{font-size:14px;line-height:1.5;color:#5A4060;padding-top:1px}
+  .option.selected .option-text{color:#2A1A35;font-weight:500}
+  .btn-next{width:100%;padding:1rem;background:#2A1A35;color:#fff;border:none;border-radius:14px;font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:.5rem;letter-spacing:.02em}
+  .btn-next:hover{background:#3D2A50;transform:translateY(-1px)}
+  .btn-next:disabled{background:#EDE5F5;color:#9480A0;cursor:not-allowed;transform:none}
+  .result-header{text-align:center;margin-bottom:2rem}
+  .result-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#E69DAF,#CFC2DA);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center}
+  .result-icon svg{width:36px;height:36px;fill:none;stroke:#fff;stroke-width:2}
+  .arch-badge{display:inline-block;background:#f6d4d2;color:#7A2050;font-family:'League Spartan',sans-serif;font-size:22px;font-weight:800;padding:8px 24px;border-radius:30px;margin-bottom:.5rem}
+  .arch-secondary{font-size:13px;color:#9480A0;margin-bottom:1.5rem}
+  .arch-secondary strong{color:#CFC2DA}
+  .ai-card{background:#fff;border:1px solid #EDE5F5;border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(207,194,218,.12)}
+  .ai-label{font-size:11px;font-weight:600;letter-spacing:.1em;color:#CFC2DA;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+  .ai-dot{width:7px;height:7px;border-radius:50%;background:#CFC2DA;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .ai-text{font-size:14px;line-height:1.8;color:#5A4060;white-space:pre-wrap}
+  .ai-loading{color:#9480A0;font-style:italic;font-size:14px}
+  .scores-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.5rem}
+  .score-item{background:#fdf6f0;border:1px solid #EDE5F5;border-radius:12px;padding:.875rem 1rem}
+  .score-name{font-size:12px;font-weight:600;color:#2A1A35;margin-bottom:.4rem}
+  .score-bar-wrap{background:#EDE5F5;border-radius:10px;height:5px;overflow:hidden}
+  .score-bar{height:5px;border-radius:10px;background:linear-gradient(90deg,#E69DAF,#CFC2DA)}
+  .btn-restart{width:100%;padding:.875rem;background:transparent;color:#9480A0;border:1.5px solid #EDE5F5;border-radius:14px;font-family:'Poppins',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;margin-top:.5rem}
+  .btn-restart:hover{border-color:#CFC2DA;color:#5A4060}
+  #result-wrap{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="quiz-wrap">
+    <div class="header">
+      <div class="logo-tag">Holky v onlinu · Osobní značka</div>
+      <h1 class="title">Jaký je tvůj<br><span>brandový archetyp?</span></h1>
+      <p class="subtitle">12 otázek, které odhalí přirozenou energii tvého brandu. Odpovídej instinktivně – první odpověď je nejpravdivější.</p>
+    </div>
+    <div class="progress-area">
+      <div class="progress-meta">
+        <span class="progress-label">Otázka <span id="q-current">1</span> z 12</span>
+        <span class="progress-num" id="q-pct">0 %</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="question-card">
+      <div class="q-number" id="q-num">Otázka 01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options-wrap"></div>
+    </div>
+    <button class="btn-next" id="btn-next" disabled onclick="nextQuestion()">Další otázka →</button>
+  </div>
+
+  <div id="result-wrap">
+    <div class="result-header">
+      <div class="logo-tag">Holky v onlinu · Výsledek</div>
+      <div class="result-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="arch-badge" id="result-primary">–</div>
+      <div class="arch-secondary">Podpůrný archetyp: <strong id="result-secondary">–</strong></div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-label"><span class="ai-dot" id="ai-dot"></span><span id="ai-label-text">AI analyzuje tvůj výsledek...</span></div>
+      <div class="ai-text" id="ai-text"><span class="ai-loading">Připravuji personalizovaný popis tvého archetypu...</span></div>
+    </div>
+    <div class="scores-grid" id="scores-grid"></div>
+    <button class="btn-restart" onclick="restartQuiz()">Spustit znovu</button>
+  </div>
+
+</div>
+<script>
+const archetypes={pecovatel:{name:"Pečovatel",score:0},hrdina:{name:"Hrdina",score:0},mudrc:{name:"Mudrc",score:0},vzpurny:{name:"Vzpurný",score:0},tvurce:{name:"Tvůrce",score:0},kouzelnik:{name:"Kouzelník",score:0},pruzkumnik:{name:"Průzkumník",score:0},nevinny:{name:"Nevinný",score:0},vladce:{name:"Vládce",score:0},milenec:{name:"Milenec",score:0},prosty:{name:"Prostý člověk",score:0},sasek:{name:"Šašek",score:0}};
+const questions=[{text:"Zákaznice ti napíše: 'Nevím jak začít.' Co uděláš jako první?",options:[{text:"Ujistím ji, že to zvládne, a provedu ji prvním krokem krok za krokem.",arch:"pecovatel"},{text:"Pošlu jí konkrétní plán a řeknu: 'Začni tímto. Dnes.'",arch:"hrdina"},{text:"Vysvětlím jí systém – proč se to tak děje a jak to funguje.",arch:"mudrc"},{text:"Řeknu jí upřímně, co ji brzdí – i když to není příjemné slyšet.",arch:"vzpurny"}]},{text:"Co tě na tvorbě obsahu baví nejvíc?",options:[{text:"Když zákaznice napíše: 'Tohle jsem přesně potřebovala slyšet.'",arch:"pecovatel"},{text:"Když vidím, že obsah zákaznici nakopne k akci a výsledkům.",arch:"hrdina"},{text:"Když mohu věci vysvětlit do hloubky a zákaznice pochopí proč.",arch:"mudrc"},{text:"Když mohu tvořit něco vizuálně nebo konceptuálně krásného.",arch:"milenec"}]},{text:"Jak nejraději vzdělávat svoji zákaznici?",options:[{text:"Průvodcem krok za krokem – aby se nikdy necítila ztracená.",arch:"pecovatel"},{text:"Inspirativními příběhy výsledků a transformací.",arch:"hrdina"},{text:"Hloubkovými analýzami a vysvětleními systémů.",arch:"mudrc"},{text:"Kreativními formáty, které dávají věcem novou perspektivu.",arch:"tvurce"}]},{text:"Zákaznice se ptá, jestli je tvůj produkt pro ni. Co odpovíš?",options:[{text:"Popíšu jí, kde je teď, a ukážu jí cestu. Nechám ji rozhodnout.",arch:"pecovatel"},{text:"Řeknu jí rovnou: pokud chceš výsledky a jsi ochotna jednat – ano.",arch:"hrdina"},{text:"Vysvětlím jí logiku produktu, aby mohla udělat informované rozhodnutí.",arch:"mudrc"},{text:"Popíšu jí transformaci, která je možná – a nechám ji, ať to ucítí.",arch:"kouzelnik"}]},{text:"Co tě přirozeně vystihuje jako autorku obsahu?",options:[{text:"Jsem jako průvodkyně – provázím, nehodnotím, vždy podporuji.",arch:"pecovatel"},{text:"Jsem přímá a říkám věci bez zbytečných okolků.",arch:"hrdina"},{text:"Přináším kontext a hlubší pochopení – ne jen rady.",arch:"mudrc"},{text:"Říkám věci nahlas, i když jsou nepohodlné nebo kontroverzní.",arch:"vzpurny"}]},{text:"Co tvoje zákaznice u tebe hledají nejčastěji?",options:[{text:"Bezpečí, orientaci a pocit, že nejsou samy.",arch:"pecovatel"},{text:"Energii, motivaci a jasný plán jak na to.",arch:"hrdina"},{text:"Pochopení, systém a logiku za věcmi.",arch:"mudrc"},{text:"Svobodu, nové možnosti a vlastní cestu.",arch:"pruzkumnik"}]},{text:"Jak přirozeně uzavíráš obsah nebo příspěvek?",options:[{text:"Nabídkou dalšího bezpečného kroku nebo podpory.",arch:"pecovatel"},{text:"Výzvou k akci – konkrétní a přímou.",arch:"hrdina"},{text:"Otázkou k zamyšlení nebo hlubší reflexí.",arch:"mudrc"},{text:"Provokativní pointou nebo neočekávaným závěrem.",arch:"vzpurny"}]},{text:"Jaká je tvoje přirozená energie v komunikaci se zákaznicemi?",options:[{text:"Teplá, přítomná, vždy na jejich straně.",arch:"pecovatel"},{text:"Energická, přímá, orientovaná na výsledky.",arch:"hrdina"},{text:"Klidná, strukturovaná, vždy připravená vysvětlit.",arch:"mudrc"},{text:"Hravá, lehká, přinášející radost a odlehčení.",arch:"sasek"}]},{text:"Co tě na online podnikání baví víc než cokoli jiného?",options:[{text:"Doprovázet zákaznice na jejich cestě a vidět jejich posun.",arch:"pecovatel"},{text:"Vidět konkrétní výsledky a transformace svých zákaznic.",arch:"hrdina"},{text:"Předávat znalosti a pomáhat lidem skutečně pochopit věci.",arch:"mudrc"},{text:"Tvořit – nové produkty, formáty, přístupy.",arch:"tvurce"}]},{text:"Jak reaguješ, když zákaznice pochybuje o sobě?",options:[{text:"Vysvětlím jí přesně proč to cítí a ukážu jí, že to má řešení.",arch:"pecovatel"},{text:"Řeknu jí: pochybnosti jsou normální – ale akce je léčí.",arch:"hrdina"},{text:"Analyzuji s ní, odkud pochybnosti vychází a co je způsobuje.",arch:"mudrc"},{text:"Pomůžu jí uvěřit, že proměna je možná – a ukážu jí jak.",arch:"kouzelnik"}]},{text:"Jaký obsah tvoříš nejsnáze a nejpřirozeněji?",options:[{text:"Průvodce a návody s jasnou strukturou a empatickým tónem.",arch:"pecovatel"},{text:"Motivační příspěvky a příběhy výsledků.",arch:"hrdina"},{text:"Hloubkové edukační texty s kontextem a logikou.",arch:"mudrc"},{text:"Vizuálně krásný nebo konceptuálně originální obsah.",arch:"tvurce"}]},{text:"Dokončuji větu: 'Zákaznice si mě vybere, protože...'",options:[{text:"...ví, že ji pochopím a budu u ní na každém kroku.",arch:"pecovatel"},{text:"...chce výsledky a ví, že s mýma to dostane.",arch:"hrdina"},{text:"...hledá pochopení a systém, ne jen rady.",arch:"mudrc"},{text:"...mluví mým jazykem a cítí, že jsme na stejné vlně.",arch:"prosty"}]}];
+let current=0,selected=null,answers=[];
+function resetScores(){Object.keys(archetypes).forEach(k=>archetypes[k].score=0)}
+function renderQuestion(){const q=questions[current];document.getElementById('q-num').textContent=`Otázka ${String(current+1).padStart(2,'0')}`;document.getElementById('q-text').textContent=q.text;document.getElementById('q-current').textContent=current+1;document.getElementById('q-pct').textContent=Math.round((current/questions.length)*100)+' %';document.getElementById('progress-fill').style.width=((current/questions.length)*100)+'%';const wrap=document.getElementById('options-wrap');wrap.innerHTML='';selected=null;document.getElementById('btn-next').disabled=true;q.options.forEach((opt,i)=>{const div=document.createElement('div');div.className='option';div.innerHTML=`<div class="option-dot"><div class="option-dot-inner"></div></div><span class="option-text">${opt.text}</span>`;div.onclick=()=>selectOption(i);wrap.appendChild(div)});document.getElementById('btn-next').textContent=current<questions.length-1?'Další otázka →':'Zobrazit výsledek →'}
+function selectOption(i){selected=i;document.querySelectorAll('.option').forEach((el,idx)=>el.classList.toggle('selected',idx===i));document.getElementById('btn-next').disabled=false}
+function nextQuestion(){if(selected===null)return;const arch=questions[current].options[selected].arch;archetypes[arch].score++;answers.push({question:questions[current].text,answer:questions[current].options[selected].text,arch});current++;if(current>=questions.length){showResults()}else{renderQuestion()}}
+function showResults(){document.getElementById('quiz-wrap').style.display='none';document.getElementById('result-wrap').style.display='block';const sorted=Object.entries(archetypes).sort((a,b)=>b[1].score-a[1].score);const primary=sorted[0];const secondary=sorted[1];const max=primary[1].score||1;document.getElementById('result-primary').textContent=primary[1].name;document.getElementById('result-secondary').textContent=secondary[1].name;const grid=document.getElementById('scores-grid');grid.innerHTML='';sorted.slice(0,6).forEach(([key,val])=>{const pct=Math.round((val.score/max)*100);grid.innerHTML+=`<div class="score-item"><div class="score-name">${val.name}</div><div class="score-bar-wrap"><div class="score-bar" style="width:${pct}%"></div></div></div>`});fetchAIDescription(primary[1].name,secondary[1].name,answers)}
+async function fetchAIDescription(primary,secondary,answers){const answersText=answers.map((a,i)=>`${i+1}. ${a.question}\n   → ${a.answer}`).join('\n\n');const prompt=`Jsi expertka na brandové archetypy pro ženy podnikající online.\n\nUživatelka právě dokončila test brandového archetypu. Na základě jejích odpovědí bylo vyhodnoceno:\n- Primární archetyp: ${primary}\n- Podpůrný archetyp: ${secondary}\n\nJejí odpovědi byly:\n${answersText}\n\nNapiš jí personalizovaný popis jejího archetypu v češtině. Styl: teplý, přímý, konkrétní – jako Pečovatel.\n\nStruktura (bez nadpisů, plynulý text):\n1. Dva odstavce o tom, kdo je jako ${primary} – co přirozeně vyzařuje, jak zákaznice cítí její energii.\n2. Jeden odstavec o podpůrném archetypu ${secondary} – jak ho přirozeně doplňuje.\n3. Dva konkrétní tipy jak svůj archetyp žít v obsahu na sítích.\n\nDélka: 200–250 slov. Oslovi ji přímo (ty/tvůj). Nezačínej větou "Jako ${primary}..."`;
+try{const response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,stream:true,messages:[{role:'user',content:prompt}]})});const reader=response.body.getReader();const decoder=new TextDecoder();let fullText='';const textEl=document.getElementById('ai-text');textEl.innerHTML='';document.getElementById('ai-dot').style.animation='pulse 1.5s infinite';document.getElementById('ai-label-text').textContent='Tvůj personalizovaný popis';while(true){const{done,value}=await reader.read();if(done)break;const chunk=decoder.decode(value);const lines=chunk.split('\n').filter(l=>l.startsWith('data: '));for(const line of lines){const data=line.slice(6);if(data==='[DONE]')continue;try{const parsed=JSON.parse(data);if(parsed.type==='content_block_delta'&&parsed.delta?.text){fullText+=parsed.delta.text;textEl.textContent=fullText}}catch{}}}document.getElementById('ai-dot').style.animation='none';document.getElementById('ai-dot').style.opacity='.4'}catch(e){document.getElementById('ai-text').textContent='Výsledek: '+primary+' s podpůrným '+secondary+'. Pro personalizovaný popis zkus test zopakovat.'}}
+function restartQuiz(){current=0;selected=null;answers=[];resetScores();document.getElementById('result-wrap').style.display='none';document.getElementById('quiz-wrap').style.display='block';renderQuestion()}
+resetScores();renderQuestion();
+</script>
+</body>
+</html>
